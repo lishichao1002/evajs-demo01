@@ -9,7 +9,8 @@ import { RenderSystem } from "@eva/plugin-renderer-render";
 import { TransitionSystem } from "@eva/plugin-transition";
 import { GraphicsSystem } from "@eva/plugin-renderer-graphics";
 import { TextSystem } from "@eva/plugin-renderer-text";
-import { GameController } from "./Game/Game";
+import { initScene } from "./Game/GameSence";
+// import { GameContainer } from "./Game/GameContainer";
 
 resource.addResource(resources);
 
@@ -34,6 +35,7 @@ const game = new Game({
 game.scene.transform.size.width = 750;
 game.scene.transform.size.height = 1484;
 
-new GameController(game.scene).init();
+// new GameContainer(game.scene).init();
+initScene(game.scene);
 
 window.game = game;
