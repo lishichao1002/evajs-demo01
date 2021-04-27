@@ -12,6 +12,7 @@ import {
   Person_Jump_Height,
   Person_Width,
 } from "./const";
+import { rectHitTest } from "./Util";
 
 export class GameComponent extends Component {
   // 人
@@ -172,6 +173,55 @@ export class GameComponent extends Component {
       this.mounts.push(mount);
 
       console.log(this);
+    }
+
+    if (this.activeMount) {
+      // ⛰的位置
+      const mountPosition = this.activeMount.transform.position;
+      const mountSize = this.activeMount.transform.size;
+      // 人的位置
+      const personPosition = this.person.transform.position;
+      const personSize = this.person.transform.size;
+      if (mountPosition.x > 0 && mountPosition.x < Full_Width) {
+        // 碰撞监测
+        if (
+          rectHitTest(
+            {
+              x: mountPosition.x,
+              y: mountPosition.y,
+              w: mountSize.width,
+              h: mountSize.height,
+            },
+            {
+              x: personPosition.x,
+              y: personPosition.y,
+              w: personSize.width,
+              h: personSize.height,
+            }
+          )
+        ) {
+          // 碰撞了
+          const mountTrans = this.activeMount.getComponent<Transition>(
+            "Transition"
+          );
+          if (mountTrans) {
+            mountTrans.stop("move");
+            this.activeMount.removeComponent(mountTrans);
+            this.activeMount = null;
+          }
+          const personTrans = this.person.getComponent<Transition>(
+            "Transition"
+          );
+          if (personTrans) {
+            personTrans.stop("jump");
+            this.isJump = false;
+            this.person.removeComponent(personTrans);
+          }
+
+          // 碰撞后判断画布是否需要整体下移
+          
+        }
+      }
     }
   }
 }
